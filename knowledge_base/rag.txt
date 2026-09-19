@@ -1,0 +1,17 @@
+# RAG: Retrieval-Augmented Generation
+
+## What is RAG?
+
+Retrieval-Augmented Generation (RAG) is a technique that combines a retrieval system with a large language model. Instead of asking the LLM to answer purely from its training knowledge, RAG first searches a private knowledge base for relevant documents, then feeds those documents to the LLM as context. This grounds the model's answers in real, up-to-date information.
+
+## Why use RAG?
+
+RAG is used for three main reasons. First, it keeps answers up to date without retraining the model, since the knowledge base can be updated at any time. Second, it reduces hallucination because the model must answer based on retrieved evidence. Third, it enables organizations to answer questions about their own private data that was never part of the model's training.
+
+## How RAG works step by step
+
+The RAG pipeline has three stages. The indexing stage splits documents into small chunks and converts each chunk into a vector embedding, storing them in a vector database. The retrieval stage takes the user's question, converts it into an embedding, and finds the most similar chunks using vector similarity. The generation stage sends the question together with the retrieved chunks to an LLM, which produces a grounded answer with citations.
+
+## Common RAG challenges
+
+Common challenges include chunk size selection, retrieval quality, and relevance. Chunks that are too large dilute the signal, while chunks that are too small lose context. Embedding choice and similarity thresholds matter for retrieval quality. Reranking retrieved results can significantly improve the final answer quality.

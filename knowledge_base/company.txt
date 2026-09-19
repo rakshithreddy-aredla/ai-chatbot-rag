@@ -1,0 +1,17 @@
+# AIHive Company Handbook
+
+## About AIHive
+
+AIHive is a technology company founded in 2018 by three engineers who met at university. We build machine learning and AI products that help businesses automate customer support, analyze documents, and make data-driven decisions. Our headquarters is in Bengaluru, India, with a second office in San Francisco. We have 250 employees across engineering, product, design, data science, and sales teams.
+
+## Our Products
+
+Our flagship product is **SupportBot**, an AI assistant that answers customer questions automatically using retrieval-augmented generation (RAG). SupportBot reads a company's documentation and knowledge base, then answers customer queries with citations back to the source documents. It reduces support ticket volume by up to 60 percent.
+
+Our second product is **DocuSense**, a document analysis tool that extracts key information, summaries, and insights from PDFs, contracts, and reports. It uses a combination of natural language processing and computer vision.
+
+Our third product is **InsightStream**, an analytics platform that builds machine learning models on top of a company's own data without requiring customers to write any code.
+
+## Mission and Values
+
+Our mission is to make artificial intelligence accessible and trustworthy for every business. We value transparency, customer focus, continuous learning, and responsible AI. We are committed to building AI systems that are fair, explainable, and free from harmful bias.
