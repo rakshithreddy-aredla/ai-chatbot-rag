@@ -1,114 +1,46 @@
-# AI Chatbot with RAG (Retrieval-Augmented Generation) 🤖
+# RAG chatbot
 
-A production-style **Retrieval-Augmented Generation** chatbot that answers questions from a private knowledge base. Includes both a command-line interface and a **Flask web app** you can demo in the browser.
-
-This is an advanced, interview-worthy project — RAG is the technology behind every modern AI assistant (support bots, document Q&A, internal knowledge tools).
-
-## 🎯 What makes this "advanced"
-
-Unlike a plain LLM wrapper, this system **grounds its answers in real documents**:
-1. **INDEX** - loads documents, splits them into chunks, embeds each chunk
-2. **RETRIEVE** - finds the most relevant chunks for a user's question
-3. **GENERATE** - produces an answer grounded in the retrieved context (with source citations)
-
-This is the exact architecture used in production RAG systems, just scaled down.
-
-## 🧠 How it works
+Answers questions from a set of documents, with citations back to the source. Browser UI included.
 
 ```
-                 ┌────────────────────────────────────────────┐
-                 │            KNOWLEDGE BASE                  │
-                 │  company.txt  ·  rag.txt  ·  (add your own)│
-                 └────────────────────────────────────────────┘
-                                  │  INDEX (chunk + embed)
-                                  ▼
-                 ┌────────────────────────────────────────────┐
-                 │              VECTOR STORE                   │
-                 │   TF-IDF vectors for every chunk            │
-                 └────────────────────────────────────────────┘
-   User question ──► RETRIEVE (cosine similarity) ──► top-k chunks
-                                  │
-                                  ▼
-                 ┌────────────────────────────────────────────┐
-                 │            GENERATION                      │
-                 │   LLM (or offline extractive fallback)     │
-                 └────────────────────────────────────────────┘
-                                  │
-                                  ▼
-                          Grounded answer + sources
+   user question
+        │
+        ▼
+   RETRIEVE ──── top-k chunks by cosine similarity
+        │
+        ▼
+   GENERATE ──── grounded answer + source citations
+        │
+        ▼
+   "Answer. Sources: company.txt"
 ```
 
-## ✨ Features
+Documents are split on paragraph boundaries with headings kept attached, embedded with TF-IDF, and stored as vectors. Retrieval is cosine similarity over those vectors.
 
-- **Chunking** - paragraph-aware splitting with heading merging
-- **Retrieval** - TF-IDF + cosine similarity (runs offline, no heavy deps)
-- **Generation** - two modes:
-  - **LLM mode** (best quality): set `OPENAI_API_KEY`, uses any OpenAI-compatible API
-  - **Offline mode** (zero setup): extractive answer, works anywhere
-- **Source citations** - shows which document each answer came from
-- **Two interfaces** - CLI + Flask web app
+Two generation modes:
 
-## 🚀 How to run
+- **LLM** — set `OPENAI_API_KEY`, works with any OpenAI-compatible endpoint. Better answers.
+- **Offline** — no key, no network. Pulls the most relevant sentences from the retrieved chunks directly.
 
-**Web app (browser demo):**
+The offline mode is not a stub. It's what runs in CI, and it makes the retrieval half of the pipeline demonstrable without an API key, which is the half that's actually worth reading.
+
+## Run it
+
 ```bash
 pip install -r requirements.txt
-python app.py
-# Open http://127.0.0.1:5000
+
+python app.py     # browser UI at http://127.0.0.1:5000
+python rag_engine.py   # command line
 ```
 
-**Command line:**
-```bash
-python rag_engine.py
-```
+Drop `.txt` files into `knowledge_base/` to change what it knows.
 
-**Enable LLM mode (optional, best answers):**
-```bash
-set OPENAI_API_KEY=your_key_here
-python app.py
-```
-
-## 📊 Example
+## Files
 
 ```
-Q: What does SupportBot do?
-A: Our flagship product is SupportBot, an AI assistant that answers customer
-   questions automatically using retrieval-augmented generation (RAG).
-Sources: company.txt
-
-Q: Why use RAG?
-A: RAG is used for three main reasons. First, it keeps answers up to date
-   without retraining the model... Second, it reduces hallucination...
-Sources: rag.txt
+app.py              # Flask server
+rag_engine.py       # index, retrieve, generate
+knowledge_base/     # your documents here
+templates/          # browser UI
+requirements.txt
 ```
-
-## 🏗️ Project Structure
-
-```
-06-ai-chatbot-rag/
-├── app.py              # Flask web server
-├── rag_engine.py       # Core RAG pipeline (index, retrieve, generate)
-├── knowledge_base/     # Drop your documents here (.txt)
-│   ├── company.txt
-│   └── rag.txt
-├── templates/
-│   └── index.html      # Browser chat UI
-├── requirements.txt
-└── README.md
-```
-
-## 📚 Concepts Covered
-
-- Retrieval-Augmented Generation (RAG) end-to-end
-- Document chunking strategies & their tradeoffs
-- Text embedding & vector similarity search
-- LLM API integration with graceful fallback
-- Web app deployment (Flask)
-- Prompt engineering (system prompt for grounded answers)
-
-## 💡 To Extend (great hackathon ideas)
-
-- Swap TF-IDF for real embeddings (sentence-transformers, OpenAI, or a vector DB like Chroma/FAISS)
-- Add document upload through the web UI
-- Add reranking to improve retrieval quality
-- Add chat history/memory for multi-turn conversations
